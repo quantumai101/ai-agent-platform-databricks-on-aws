@@ -58,8 +58,7 @@ ai-agent-platform/
 
 ### Full Documentation
 
-See [docs/README.md](docs/README.md) for the complete guide, or open [docs/index.html](docs/index.html) for the web version.
-
+See [`docs/README.md`](docs/README.md) for the complete guide, or open [`docs/index.html`](docs/index.html) for the web version.
 
 ---
 
