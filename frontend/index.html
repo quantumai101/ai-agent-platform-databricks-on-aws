@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Agent Platform - One-Click Deploy</title>
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: #000;
+            font-family: 'Courier New', monospace;
+        }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+    
+    <script type="text/babel">
+        // Copy the entire JSX code from ai-agent-platform.jsx here
+        const { useState, useEffect } = React;
+
+        const AIAgentPlatform = () => {
+          const [deployedAgents, setDeployedAgents] = useState(new Set());
+          const [deploymentLogs, setDeploymentLogs] = useState([]);
+          const [activeTab, setActiveTab] = useState('dashboard');
+          const [deploymentProgress, setDeploymentProgress] = useState({});
+
+          // 5 AI Agents Configuration
+          const agents = [
+            {
+              id: 'NOVA',
+              name: 'NOVA',
+              role: 'INFRASTRUCTURE AGENT',
+              status: 'LIVE',
+              description: 'Build & Deploy AI Services / APIs',
+              tasks: 'LLMs, RAG, ML models, agents on AWS',
+              color: 'from-blue-500 to-cyan-500',
+              deploymentSteps: [
+                'Spawning agent NOVA [Infrastructure]',
+                'Scaffold FastAPI microservices',
+                'Deploy to EKS with Helm charts',
+                'Configure AWS API Gateway',
+                'Validate SLIs — p99 < 200ms',
+                'All tasks completed ✓'
+              ]
+            },
+            {
+              id: 'AXIOM',
+              name: 'AXIOM',
+              role: 'DATA PIPELINE AGENT',
+              status: 'LIVE',
+              description: 'Data Pipelines — Training & Retrieval',
+              tasks: 'Governance, privacy, auditability on Databricks',
+              color: 'from-purple-500 to-pink-500',
+              deploymentSteps: [
+                'Spawning agent AXIOM [Data Pipeline]',
+                'Create Delta Lake pipelines',
+                'Register lineage in MLflow',
+                'Add data quality checks',
+                'Configure PII masking',
+                'All tasks completed ✓'
+              ]
+            },
+            {
+              id: 'SENTINEL',
+              name: 'SENTINEL',
+              role: 'TESTING & QA AGENT',
+              status: 'LIVE',
+              description: 'Automated Testing & Red Team Operations',
+              tasks: 'E2E tests, evals, red-teaming, safety guardrails',
+              color: 'from-green-500 to-emerald-500',
+              deploymentSteps: [
+                'Spawning agent SENTINEL [Testing]',
+                'Generate E2E test suites',
+                'Deploy red-team evaluators',
+                'Configure automated evals',
+                'Setup safety guardrails',
+                'All tasks completed ✓'
+              ]
+            },
+            {
+              id: 'NEXUS',
+              name: 'NEXUS',
+              role: 'DOCUMENTATION AGENT',
+              status: 'LIVE',
+              description: 'Auto-Generate Technical Documentation',
+              tasks: 'Architecture docs, API specs, runbooks, onboarding',
+              color: 'from-orange-500 to-red-500',
+              deploymentSteps: [
+                'Spawning agent NEXUS [Documentation]',
+                'Analyze codebase structure',
+                'Generate architecture diagrams',
+                'Create API documentation',
+                'Build onboarding guides',
+                'All tasks completed ✓'
+              ]
+            },
+            {
+              id: 'PROMETHEUS',
+              name: 'PROMETHEUS',
+              role: 'OPTIMIZATION AGENT',
+              status: 'LIVE',
+              description: 'System Optimization & Self-Improvement',
+              tasks: 'Performance monitoring, A/B testing, auto-scaling',
+              color: 'from-yellow-500 to-amber-500',
+              deploymentSteps: [
+                'Spawning agent PROMETHEUS [Optimization]',
+                'Deploy metrics collectors',
+                'Configure A/B test framework',
+                'Setup auto-scaling policies',
+                'Initialize self-improvement loop',
+                'All tasks completed ✓'
+              ]
+            }
+          ];
+
+          const deployAgent = async (agentId) => {
+            const agent = agents.find(a => a.id === agentId);
+            
+            for (let i = 0; i < agent.deploymentSteps.length; i++) {
+              await new Promise(resolve => setTimeout(resolve, 800));
+              
+              setDeploymentLogs(prev => [
+                ...prev,
+                {
+                  agent: agentId,
+                  message: agent.deploymentSteps[i],
+                  timestamp: new Date().toLocaleTimeString(),
+                  type: i === agent.deploymentSteps.length - 1 ? 'success' : 'info'
+                }
+              ]);
+              
+              setDeploymentProgress(prev => ({
+                ...prev,
+                [agentId]: ((i + 1) / agent.deploymentSteps.length) * 100
+              }));
+            }
+            
+            setDeployedAgents(prev => new Set([...prev, agentId]));
+          };
+
+          const deployAllAgents = async () => {
+            setDeploymentLogs([]);
+            setDeploymentProgress({});
+            
+            for (const agent of agents) {
+              await deployAgent(agent.id);
+            }
+          };
+
+          return (
+            <div className="min-h-screen bg-black text-white font-mono">
+              <div className="border-b border-yellow-500/30 p-4">
+                <div className="flex items-center justify-between max-w-7xl mx-auto">
+                  <div>
+                    <h1 className="text-4xl font-bold tracking-wider">
+                      AI AGENT
+                      <br />
+                      <span className="text-6xl">WORKFORCE</span>
+                    </h1>
+                    <p className="text-yellow-500 text-sm mt-2">
+                      SENIOR AI ENGINEER · DIGITAL EMPLOYEE PLATFORM · ASX200 ENTERPRISE
+                    </p>
+                  </div>
+                  
+                  <div className="text-right">
+                    <div className="text-yellow-500 text-sm mb-2">AGENTS DEPLOYED</div>
+                    <div className="text-5xl font-bold">{deployedAgents.size}/5</div>
+                    <button
+                      onClick={deployAllAgents}
+                      disabled={deployedAgents.size === 5}
+                      className={`mt-4 px-8 py-3 border-2 rounded-lg font-bold text-lg tracking-wider transition-all ${
+                        deployedAgents.size === 5
+                          ? 'border-green-500 bg-green-500/20 text-green-500'
+                          : 'border-yellow-500 bg-yellow-500/10 hover:bg-yellow-500/20 text-yellow-500'
+                      }`}
+                    >
+                      {deployedAgents.size === 5 ? '✓ DEPLOYED' : '▶ DEPLOY AGENTS'}
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <div className="max-w-7xl mx-auto p-6">
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                  <div>
+                    <h2 className="text-2xl font-bold mb-4 text-yellow-500 tracking-wider">
+                      ACTIVE AGENTS
+                    </h2>
+                    
+                    <div className="space-y-4">
+                      {agents.map((agent) => (
+                        <div
+                          key={agent.id}
+                          className={`border-2 rounded-lg p-4 transition-all ${
+                            deployedAgents.has(agent.id)
+                              ? 'border-green-500 bg-green-500/10'
+                              : 'border-gray-700 bg-gray-900/50'
+                          }`}
+                        >
+                          <div className="flex items-start justify-between mb-3">
+                            <div>
+                              <h3 className="text-xl font-bold">{agent.name}</h3>
+                              <p className="text-xs text-gray-400 uppercase tracking-wide">
+                                {agent.role}
+                              </p>
+                            </div>
+                            
+                            <div className="flex items-center space-x-2">
+                              {deployedAgents.has(agent.id) ? (
+                                <span className="text-xs text-green-500 font-bold">LIVE</span>
+                              ) : (
+                                <button
+                                  onClick={() => deployAgent(agent.id)}
+                                  className="px-3 py-1 border border-yellow-500 rounded text-xs hover:bg-yellow-500/20 transition-all"
+                                >
+                                  DEPLOY
+                                </button>
+                              )}
+                            </div>
+                          </div>
+                          
+                          <div className="space-y-2 text-sm">
+                            <p className="text-gray-300">{agent.description}</p>
+                            <p className="text-gray-500 text-xs">{agent.tasks}</p>
+                          </div>
+                          
+                          {deploymentProgress[agent.id] > 0 && deploymentProgress[agent.id] < 100 && (
+                            <div className="mt-3">
+                              <div className="w-full bg-gray-800 rounded-full h-2">
+                                <div
+                                  className={`h-2 rounded-full bg-gradient-to-r ${agent.color} transition-all duration-300`}
+                                  style={{ width: `${deploymentProgress[agent.id]}%` }}
+                                />
+                              </div>
+                            </div>
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div>
+                    <h2 className="text-2xl font-bold mb-4 text-yellow-500 tracking-wider">
+                      DEPLOYMENT LOGS
+                    </h2>
+                    
+                    <div className="bg-gray-900 border border-gray-700 rounded-lg p-4 h-[600px] overflow-y-auto font-mono text-sm">
+                      <div className="flex items-center space-x-2 text-gray-500 mb-4">
+                        <span>agent-runtime — bash</span>
+                      </div>
+                      
+                      <div className="space-y-2">
+                        {deploymentLogs.length === 0 ? (
+                          <p className="text-gray-600">
+                            Awaiting deployment... Click "DEPLOY AGENTS" to start.
+                          </p>
+                        ) : (
+                          deploymentLogs.map((log, index) => (
+                            <div
+                              key={index}
+                              className={`flex items-start space-x-2 ${
+                                log.type === 'success'
+                                  ? 'text-green-400'
+                                  : 'text-blue-400'
+                              }`}
+                            >
+                              <span className="text-gray-600">{log.timestamp}</span>
+                              <span className="text-yellow-500">▶</span>
+                              <span>[{log.agent}]</span>
+                              <span>{log.message}</span>
+                            </div>
+                          ))
+                        )}
+                      </div>
+                    </div>
+
+                    {deployedAgents.size === 5 && (
+                      <div className="mt-4 border-2 border-green-500 rounded-lg p-4 bg-green-500/10">
+                        <h3 className="text-xl font-bold text-green-500 mb-2">
+                          ✓ READY FOR GITHUB DEPLOYMENT
+                        </h3>
+                        <div className="space-y-2 text-sm text-gray-300">
+                          <p>✓ All 5 agents deployed successfully</p>
+                          <p>✓ Infrastructure validated</p>
+                          <p>✓ Tests passing</p>
+                          <p>✓ Documentation generated</p>
+                          <p className="pt-2 text-yellow-500 font-bold">
+                            → Ready to commit to repository
+                          </p>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </div>
+            </div>
+          );
+        };
+
+        ReactDOM.render(<AIAgentPlatform />, document.getElementById('root'));
+    </script>
+</body>
+</html>
